@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Terminal.init({
-    TerminalName: {
+    terminalName: {
       type:DataTypes.STRING,
       allowNull:false,
     },
