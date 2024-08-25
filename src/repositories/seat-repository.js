@@ -1,5 +1,6 @@
 const Crud = require("./crud-repository");
-const {Seat} = require('../models');
+const {Seat, sequelize} = require('../models');
+const { generateSeatMap } = require("../utils/helpers/seatMapGenerate");
 
 class SeatRepository extends Crud{
     constructor(){
@@ -7,9 +8,14 @@ class SeatRepository extends Crud{
     }
 
     async createSeatMap(data){
+        const transaction = await sequelize.transaction();
         try {
-            return await Seat.bulkCreate(data);
+            const seatObj = generateSeatMap(data.coachNo,data.row,data.column,data.totalSeats);
+            const response = await Seat.bulkCreate(seatObj,{transaction:transaction});
+            transaction.commit();
+            return response;
         } catch (error) {
+            transaction.rollback();
             throw error;
         }
     }
