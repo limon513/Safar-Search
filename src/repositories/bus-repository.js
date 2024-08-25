@@ -14,16 +14,15 @@ class BusRepository extends Crud{
         const transaction = await sequelize.transaction();
         try {
             const bus = await Bus.create(data,{transaction:transaction});
-            const seatObj = generateSeatMap(bus.coachNo,data.row,data.column,data.totalSeats);
-            let seat = [];
+            const seatObj = generateSeatMap(bus.coachNo,
+                                            data.row,
+                                            data.column,
+                                            data.totalSeats);
             seatObj.forEach(async (data)=>{
-                seat.push(await SeatRepo.create(data,{transaction:transaction}));
+                await SeatRepo.create(data,{transaction:transaction});
             });
             transaction.commit();
-            return {
-                bus:bus,
-                seatMap:seat
-            };
+            return bus;
         } catch (error) {
             transaction.rollback();
             throw error;

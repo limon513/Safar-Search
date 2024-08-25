@@ -8,8 +8,7 @@ class SeatRepository extends Crud{
 
     async createSeatMap(data){
         try {
-            const response = await Seat.bulkCreate(data);
-            return response;
+            return await Seat.bulkCreate(data);
         } catch (error) {
             throw error;
         }
