@@ -1,5 +1,6 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
+const {Enums} = require('../utils/common');
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Seats', {
@@ -17,8 +18,14 @@ module.exports = {
           key:'coachNo',
         },
       },
-      seatMap: {
-        type: Sequelize.JSON,
+      seatNo: {
+        type: Sequelize.STRING,
+        allowNull:false,
+      },
+      seatStatus: {
+        type: Sequelize.ENUM(Enums.SeatStat.AVAILABLE,Enums.SeatStat.BOOKED),
+        allowNull:false,
+        defaultValue: Enums.SeatStat.AVAILABLE,
       },
       createdAt: {
         allowNull: false,

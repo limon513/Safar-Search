@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { Enums } = require('../utils/common');
 module.exports = (sequelize, DataTypes) => {
   class Seat extends Model {
     /**
@@ -24,17 +25,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull:false,
     },
-    seatMap: {
-      type: DataTypes.JSON,
-      get(){
-        return (
-          JSON.parse(this.getDataValue('seatMap'))
-        )
-      },
-      set(value){
-        this.setDataValue('seatMap', JSON.stringify(value))
-      }
+    seatNo: {
+      type: DataTypes.STRING,
+      allowNull:false,
     },
+    seatStatus: {
+      type: DataTypes.ENUM(Enums.SeatStat.AVAILABLE,Enums.SeatStat.BOOKED),
+      defaultValue: Enums.SeatStat.AVAILABLE,
+      allowNull:false,
+    }
   }, {
     sequelize,
     modelName: 'Seat',

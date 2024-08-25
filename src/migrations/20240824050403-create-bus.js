@@ -32,7 +32,7 @@ module.exports = {
       },
       busType: {
         type: Sequelize.ENUM(Enums.BusType.AC,Enums.BusType.NON_AC),
-        default:Enums.BusType.NON_AC,
+        defaultValue:Enums.BusType.NON_AC,
         allowNull:false,
       },
       createdAt: {

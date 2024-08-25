@@ -3,6 +3,12 @@ const BusType = {
     NON_AC:'non-ac',
 }
 
+const SeatStat = {
+    AVAILABLE: 'available',
+    BOOKED: 'booked',
+}
+
 module.exports = {
     BusType,
+    SeatStat,
 }
