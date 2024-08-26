@@ -11,6 +11,16 @@ async function newTripRegister(data) {
     }
 }
 
+async function getAllTrips() {
+    try {
+        const response = await TripRepo.getAllTrips();
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     newTripRegister,
+    getAllTrips,
 }

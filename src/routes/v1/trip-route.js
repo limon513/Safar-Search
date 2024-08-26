@@ -6,4 +6,6 @@ const router = express.Router();
 
 router.post('/',TripMiddleware.newTripRegister,TripController.newTripRegister);
 
+router.get('/',TripController.getAllTrips);
+
 module.exports = router;

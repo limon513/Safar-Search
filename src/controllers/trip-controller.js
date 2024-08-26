@@ -21,6 +21,23 @@ async function  newTripRegister(req,res) {
     }
 }
 
+async function  getAllTrips(req,res) {
+    try {
+        const response = await TripService.getAllTrips();
+        if(!response) throw new AppError(['No Trip Found!'],StatusCodes.NOT_FOUND);
+        successResponse.data = response;
+        return res.
+                status(StatusCodes.OK).
+                json(successResponse);
+    } catch (error) {
+        errorResponse.error = error;
+        return res.
+                status(StatusCodes.INTERNAL_SERVER_ERROR).
+                json(errorResponse);
+    }
+}
+
 module.exports = {
     newTripRegister,
+    getAllTrips,
 }
