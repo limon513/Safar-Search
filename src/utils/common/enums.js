@@ -5,6 +5,7 @@ const BusType = {
 
 const SeatStat = {
     AVAILABLE: 'available',
+    BLOCKED: 'blocked',
     BOOKED: 'booked',
 }
 

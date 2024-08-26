@@ -8,9 +8,9 @@ function generateSeatMap(coachNo,row,col,totalseat){
         const j=65;
         for(let k=j; k<j+c; k++){
             const seatNo = (i.toString()+String.fromCharCode(k)).toString();
-            console.log(seatNo);
+            //console.log(seatNo);
             seatMap.push({
-                coachNo: coachNo,
+                coachNo: + coachNo,
                 seatNo: seatNo,
                 seatStatus: Enums.SeatStat.AVAILABLE,
             });

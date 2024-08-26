@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull:false,
     },
     seatStatus: {
-      type: DataTypes.ENUM(Enums.SeatStat.AVAILABLE,Enums.SeatStat.BOOKED),
+      type: DataTypes.ENUM(Enums.SeatStat.AVAILABLE,Enums.SeatStat.BLOCKED,Enums.SeatStat.BOOKED),
       defaultValue: Enums.SeatStat.AVAILABLE,
       allowNull:false,
     }

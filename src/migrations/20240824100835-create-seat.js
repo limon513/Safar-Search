@@ -23,7 +23,7 @@ module.exports = {
         allowNull:false,
       },
       seatStatus: {
-        type: Sequelize.ENUM(Enums.SeatStat.AVAILABLE,Enums.SeatStat.BOOKED),
+        type: Sequelize.ENUM(Enums.SeatStat.AVAILABLE,Enums.SeatStat.BLOCKED,Enums.SeatStat.BOOKED),
         allowNull:false,
         defaultValue: Enums.SeatStat.AVAILABLE,
       },

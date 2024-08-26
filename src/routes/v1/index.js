@@ -6,6 +6,6 @@ const busRoutes = require('./bus-route');
 const agencyRoutes = require('./agency-route');
 
 router.use('/bus',busRoutes);
-router.use('/agency',agencyRoutes)
+router.use('/agency',agencyRoutes);
 
 module.exports = router;

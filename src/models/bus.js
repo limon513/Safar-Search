@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate:'CASCADE',
       });
 
-      this.hasOne(models.Seat,{
+      this.hasMany(models.Seat,{
         foreignKey:'coachNo',
         sourceKey:'coachNo',
         onDelete:'CASCADE',

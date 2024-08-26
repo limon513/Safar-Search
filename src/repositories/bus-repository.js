@@ -1,7 +1,7 @@
 const Crud = require("./crud-repository");
 const {Bus, sequelize} = require('../models');
-const { generateSeatMap } = require("../utils/helpers/seatMapGenerate");
 const SeatRepository = require("./seat-repository");
+const {Transaction} = require('sequelize');
 
 const SeatRepo = new SeatRepository();
 
@@ -14,14 +14,16 @@ class BusRepository extends Crud{
         const transaction = await sequelize.transaction();
         try {
             const bus = await Bus.create(data,{transaction:transaction});
-            const seat = await SeatRepo.createSeatMap(bus,{transaction:transaction});
-            transaction.commit();
+            const seat = await SeatRepo.createSeatMap({
+                ...data, coachNo:bus.coachNo
+            },transaction);
+            await transaction.commit();
             return {
                 bus:bus,
                 seatMap:seat,
             }
         } catch (error) {
-            transaction.rollback();
+            await transaction.rollback();
             throw error;
         }
     }
