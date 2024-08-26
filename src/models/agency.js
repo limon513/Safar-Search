@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
         onDelete:'CASCADE',
         onUpdate:'CASCADE',
       });
+      this.hasMany(models.Trip,{
+        foreignKey:'agencyId',
+        sourceKey:'id',
+        onDelete:'CASCADE',
+        onUpdate:'CASCADE',
+      });
     }
   }
   Agency.init({

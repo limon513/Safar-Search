@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
         onDelete:'CASCADE',
         onUpdate:'CASCADE',
       });
+      this.hasMany(models.Trip,{
+        foreignKey:'boardingTerminal',
+        targetKey:'id',
+        onDelete:'CASCADE',
+        onUpdate:'CASCADE',
+      });
     }
   }
   Terminal.init({

@@ -25,6 +25,13 @@ module.exports = (sequelize, DataTypes) => {
         onDelete:'CASCADE',
         onUpdate:'CASCADE',
       });
+
+      this.hasMany(models.Trip,{
+        foreignKey:'coachNo',
+        sourceKey:'coachNo',
+        onDelete:'CASCADE',
+        onUpdate:'CASCADE',
+      });
     }
   }
   Bus.init({
