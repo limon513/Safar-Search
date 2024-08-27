@@ -1,5 +1,5 @@
 const Crud = require("./crud-repository");
-const {Trip,Agency,Bus,City,Terminal, sequelize, Sequelize} = require('../models');
+const {Trip,Agency,Bus,City,Terminal,Seat,sequelize, Sequelize} = require('../models');
 const { Op } = require("sequelize");
 
 class TripRepository extends Crud{
@@ -43,6 +43,19 @@ class TripRepository extends Crud{
                             )
                         },
                         where: customFilter.busType?{busType:customFilter.busType}:undefined,
+                        include:[
+                            {
+                                model:Seat,
+                                attributes:[],
+                                where:{seatStatus:'available'},
+                                duplicating:false,
+                            }
+                        ],
+                        attributes:{
+                            include:[
+                                [sequelize.fn('COUNT', sequelize.col('Bus->Seats.id')),'availableSeats']
+                            ]
+                        }
                     },
                     {
                         model:City,
@@ -59,8 +72,9 @@ class TripRepository extends Crud{
                     {
                         model:Terminal,
                         required:true,
-                    }
+                    },
                 ],
+                group:['Trip.id','Bus.coachNo'],
             });
             return response;
         } catch (error) {
