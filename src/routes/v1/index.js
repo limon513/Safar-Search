@@ -8,6 +8,6 @@ const tripRoutes = require('./trip-route');
 
 router.use('/bus',busRoutes);
 router.use('/agency',agencyRoutes);
-router.use('/trip',tripRoutes);
+router.use('/trips',tripRoutes);
 
 module.exports = router;

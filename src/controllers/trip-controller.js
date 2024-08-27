@@ -23,16 +23,16 @@ async function  newTripRegister(req,res) {
 
 async function  getAllTrips(req,res) {
     try {
-        const response = await TripService.getAllTrips();
-        if(!response) throw new AppError(['No Trip Found!'],StatusCodes.NOT_FOUND);
+        const response = await TripService.getAllTrips(req.query);
         successResponse.data = response;
         return res.
                 status(StatusCodes.OK).
                 json(successResponse);
     } catch (error) {
-        errorResponse.error = error;
+        if(error instanceof Error) errorResponse.error = error;
+        else errorResponse.error = new AppError(['service unavailable'],StatusCodes.INTERNAL_SERVER_ERROR);
         return res.
-                status(StatusCodes.INTERNAL_SERVER_ERROR).
+                status(errorResponse.error.statusCode).
                 json(errorResponse);
     }
 }
