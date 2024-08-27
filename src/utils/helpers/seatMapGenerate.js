@@ -17,7 +17,7 @@ function generateSeatMap(coachNo,row,col,totalseat){
         }
     }
     let beshi = + row+1;
-    let cholbe = + totalseat-(row*col);
+    let cholbe = Math.max(0,+ totalseat-(row*col)) ;
     while(cholbe--){
         seatMap.push({
             coachNo: coachNo,

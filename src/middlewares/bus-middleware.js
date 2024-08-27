@@ -19,7 +19,7 @@ function newBusRegister(req,res,next){
         errorResponse.error = new AppError(['seat column number required'],StatusCodes.BAD_REQUEST);
         return res.status(errorResponse.error.statusCode).json(errorResponse);
     }
-
+    req.body.totalSeats = Math.max(+ req.body.totalSeats, (+ req.body.row * + req.body.column));
     next();
 }
 
