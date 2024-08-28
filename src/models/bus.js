@@ -12,12 +12,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Agency,{
-        foreignKey:'agencyId',
-        targetKey:'id',
-        onDelete:'CASCADE',
-        onUpdate:'CASCADE',
-      });
 
       this.hasMany(models.Seat,{
         foreignKey:'coachNo',
@@ -43,6 +37,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     agencyId: {
       type: DataTypes.INTEGER,
+      allowNull:false,
+    },
+    agencyName: {
+      type: DataTypes.STRING,
+      allowNull:false,
+    },
+    agencyEmail: {
+      type: DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        isEmail:true,
+      }
+    },
+    agencyPhone: {
+      type: DataTypes.STRING,
       allowNull:false,
     },
     totalSeats: {

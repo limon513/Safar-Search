@@ -13,10 +13,21 @@ module.exports = {
       agencyId: {
         type: Sequelize.INTEGER,
         allowNull:false,
-        references:{
-          model:'Agencies',
-          key:'id',
+      },
+      agencyName: {
+        type: Sequelize.STRING,
+        allowNull:false,
+      },
+      agencyEmail: {
+        type: Sequelize.STRING,
+        allowNull:false,
+        validate:{
+          isEmail:true,
         }
+      },
+      agencyPhone: {
+        type: Sequelize.STRING,
+        allowNull:false,
       },
       totalSeats: {
         type: Sequelize.INTEGER,

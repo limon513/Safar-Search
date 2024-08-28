@@ -11,12 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Agency,{
-        foreignKey:'agencyId',
-        targetKey: 'id',
-        onDelete:'CASCADE',
-        onUpdate:'CASCADE',
-      });
       this.belongsTo(models.Bus,{
         foreignKey:'coachNo',
         targetKey:'coachNo',
@@ -46,10 +40,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Trip.init({
-    agencyId: {
-      type:DataTypes.INTEGER,
-      allowNull:false,
-    },
     coachNo: {
       type:DataTypes.INTEGER,
       allowNull:false,
@@ -74,10 +64,6 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.INTEGER,
       allowNull:false,
     },
-    allotedSeats: {
-      type:DataTypes.INTEGER,
-      allowNull:false,
-    },
     price: {
       type:DataTypes.INTEGER,
       allowNull:false,
@@ -85,6 +71,9 @@ module.exports = (sequelize, DataTypes) => {
     route: {
       type: DataTypes.STRING
     },
+    allowedTerminals: {
+      type: DataTypes.STRING,
+    }
   }, {
     sequelize,
     modelName: 'Trip',

@@ -40,8 +40,8 @@ async function getAllTrips(query) {
         }
     }
 
-    if(query.srt){
-        const params = query.srt.split(',');
+    if(query.sort){
+        const params = query.sort.split(',');
         //console.log(params);
         const sortary = params.map((param)=>param.split('_'));
         //console.log(sortary);

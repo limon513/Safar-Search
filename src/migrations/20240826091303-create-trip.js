@@ -9,14 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      agencyId: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
-        references:{
-          model:'Agencies',
-          key:'id'
-        }
-      },
       coachNo: {
         type: Sequelize.INTEGER,
         allowNull:false,
@@ -57,16 +49,15 @@ module.exports = {
           key:'id',
         }
       },
-      allotedSeats: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
-      },
       price: {
         type: Sequelize.INTEGER,
         allowNull:false,
       },
       route: {
         type: Sequelize.STRING
+      },
+      allowedTerminals: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

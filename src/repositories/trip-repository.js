@@ -20,18 +20,16 @@ class TripRepository extends Crud{
     async getAllTrips(customFilter,sortFilter){
         try {
             const response = await Trip.findAll({
+                attributes:{
+                    exclude:['agencyId','createdAt','updatedAt']
+                },
                 where:{
                     [Op.and]:[
                         customFilter.departureDate?{departureDate:customFilter.departureDate}:undefined,
                         customFilter.departureTime?{departureTime:customFilter.departureTime}:undefined,
                     ]
                 },
-                order:sortFilter,
                 include:[
-                    {
-                        model:Agency,
-                        required:true,
-                    },
                     {
                         model:Bus,
                         required:true,
@@ -54,7 +52,8 @@ class TripRepository extends Crud{
                         attributes:{
                             include:[
                                 [sequelize.fn('COUNT', sequelize.col('Bus->Seats.id')),'availableSeats']
-                            ]
+                            ],
+                            exclude:['agencyId','row','column','createdAt','updatedAt']
                         }
                     },
                     {
@@ -62,19 +61,29 @@ class TripRepository extends Crud{
                         required:true,
                         as:'departureCity', 
                         where: customFilter.cityCode1?{cityCode:customFilter.cityCode1}:undefined,
+                        attributes:{
+                            exclude:['createdAt','updatedAt']
+                        }
                     },
                     {
                         model:City,
                         required:true,
                         as:'arrivalCity',
                         where: customFilter.cityCode2?{cityCode:customFilter.cityCode2}:undefined,
+                        attributes:{
+                            exclude:['createdAt','updatedAt']
+                        }
                     },
                     {
                         model:Terminal,
                         required:true,
+                        attributes:{
+                            exclude:['createdAt','updatedAt']
+                        }
                     },
                 ],
                 group:['Trip.id','Bus.coachNo'],
+                order:sortFilter,
             });
             return response;
         } catch (error) {
