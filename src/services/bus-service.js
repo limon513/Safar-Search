@@ -13,6 +13,16 @@ async function newBusRegister(data) {
     }
 }
 
+async function getBusesbyAgency(id) {
+    try {
+        const response = await BusRepo.getBusesbyAgency(id);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     newBusRegister,
+    getBusesbyAgency,
 }

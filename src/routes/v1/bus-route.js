@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/',BusMiddleware.newBusRegister,BusController.newBusRegister);
 router.post('/seats/:coachNo',SeatController.getSeatMap);
+router.get('/',BusMiddleware.getBusesbyAgency,BusController.getBusesbyAgency);
 
 module.exports = router;

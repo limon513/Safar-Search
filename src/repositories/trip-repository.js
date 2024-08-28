@@ -1,5 +1,5 @@
 const Crud = require("./crud-repository");
-const {Trip,Agency,Bus,City,Terminal,Seat,sequelize, Sequelize} = require('../models');
+const {Trip,Bus,City,Terminal,Seat,sequelize, Sequelize} = require('../models');
 const { Op } = require("sequelize");
 
 class TripRepository extends Crud{

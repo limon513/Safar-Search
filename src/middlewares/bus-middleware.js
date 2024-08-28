@@ -23,6 +23,15 @@ function newBusRegister(req,res,next){
     next();
 }
 
+function getBusesbyAgency(req,res,next){
+    if(!req.body.agencyId){
+        errorResponse.error = new AppError(['agencyId required'],StatusCodes.BAD_REQUEST);
+        return res.status(errorResponse.error.statusCode).json(errorResponse);
+    }
+    next();
+}
+
 module.exports ={
     newBusRegister,
+    getBusesbyAgency
 }

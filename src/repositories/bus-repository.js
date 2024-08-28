@@ -1,7 +1,7 @@
 const Crud = require("./crud-repository");
 const {Bus, sequelize} = require('../models');
 const SeatRepository = require("./seat-repository");
-const {Transaction} = require('sequelize');
+const {Transaction, where} = require('sequelize');
 
 const SeatRepo = new SeatRepository();
 
@@ -27,6 +27,21 @@ class BusRepository extends Crud{
             throw error;
         }
     }
+
+    async getBusesbyAgency(id){
+        try {
+            const response = await Bus.findAll({
+                where:{
+                    agencyId:id,
+                }
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
 }
 
 module.exports = BusRepository;
