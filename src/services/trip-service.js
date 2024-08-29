@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const {TripRepository} = require('../repositories');
-const { formatTime } = require('../utils/helpers/dateTimeCompare');
+const { formatTime, compareTime, getTodaysDateString, instantTimeString } = require('../utils/helpers/dateTimeCompare');
 const AppError = require('../utils/errors/App-Error');
 const { StatusCodes } = require('http-status-codes');
 
@@ -18,6 +18,7 @@ async function newTripRegister(data) {
 async function getAllTrips(query) {
     let customFilter = {};
     let sortFilter = [];
+    const lastTime = "23:59:59";
 
     if(query.trip){
         [departure,arrival] = query.trip.split("-");
@@ -29,14 +30,43 @@ async function getAllTrips(query) {
         customFilter.busType = query.b_type;
     }
 
+    if(!query.date){
+        customFilter.departureDate = getTodaysDateString();
+    }
+
     if(query.date){
-        customFilter.departureDate = query.date;
+        if(compareTime(query.date,new Date().getTime())) customFilter.departureDate = getTodaysDateString();
+        else customFilter.departureDate = query.date;
     }
 
     if(query.time){
+        
         [t1,t2]=query.time.split("-");
+        const time1 = formatTime(t1);
+        const time2 = formatTime(t2);
+        const instantTime = instantTimeString();
+        console.log(`time1${time1}time2${time2}time3${instantTime}`);
+        if(time2 > time1 && time1>=instantTime || customFilter.departureDate > getTodaysDateString()){
+            customFilter.departureTime = {
+                [Op.between]:[time1,time2]
+            }
+        }
+        else if(time2 > time1 && instantTime > time1 && instantTime < time2){
+            customFilter.departureTime = {
+                [Op.between]:[instantTime,time2]
+            }
+        }
+        else if(time2 > time1 && instantTime >= time2){
+            customFilter.departureTime = {
+                [Op.between]:[instantTime,lastTime]
+            }
+        }
+    }
+
+    if(!query.time){
+        const instantTime = instantTimeString();
         customFilter.departureTime = {
-            [Op.between]:[formatTime(t1),formatTime(t2)]
+            [Op.between]:[instantTime,lastTime]
         }
     }
 
