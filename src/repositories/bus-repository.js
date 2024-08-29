@@ -1,7 +1,8 @@
 const Crud = require("./crud-repository");
-const {Bus, sequelize} = require('../models');
+const {Bus,Trip, sequelize} = require('../models');
 const SeatRepository = require("./seat-repository");
-const {Transaction, where} = require('sequelize');
+const {Transaction, where, Op} = require('sequelize');
+const { getTodaysDateString } = require("../utils/helpers/dateTimeCompare");
 
 const SeatRepo = new SeatRepository();
 
@@ -33,7 +34,19 @@ class BusRepository extends Crud{
             const response = await Bus.findAll({
                 where:{
                     agencyId:id,
-                }
+                },
+                include:[
+                    {
+                        model:Trip,
+                        required:true,
+                        where:{
+                            departureDate:{
+                                [Op.gte]:getTodaysDateString()
+                            }
+                        },
+                        attributes:['from','to','departureDate','departureTime']
+                    }
+                ]
             });
             return response;
         } catch (error) {
