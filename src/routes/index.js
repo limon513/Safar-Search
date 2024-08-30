@@ -1,8 +1,10 @@
 const express = require('express');
-const v1Routes = require('./v1');
+const publicRoutes = require('./public');
+const privateRoutes = require('./private');
 
 const router = express.Router();
 
-router.use('/v1',v1Routes);
+router.use('/public',publicRoutes);
+router.use('/private',privateRoutes);
 
 module.exports = router;
