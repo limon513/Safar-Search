@@ -11,6 +11,16 @@ async function getCities() {
     }
 }
 
+async function getCitiyById(id) {
+    try {
+        const city = await CityRepo.getCitiyById(id);
+        return city;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     getCities,
+    getCitiyById
 }

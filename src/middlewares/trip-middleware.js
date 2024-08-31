@@ -2,8 +2,9 @@ const { StatusCodes } = require("http-status-codes");
 const { errorResponse } = require("../utils/common");
 const AppError = require("../utils/errors/App-Error");
 const { getTodaysDateString, instantTimeString, compareTime } = require("../utils/helpers/dateTimeCompare");
+const { CityService } = require("../services");
 
-function newTripRegister(req,res,next){
+async function newTripRegister(req,res,next){
     if(!req.body.coachNo){
         errorResponse.error = new AppError(['coachNo required'],StatusCodes.BAD_REQUEST);
         return res.status(StatusCodes.BAD_REQUEST).json(errorResponse);
@@ -40,13 +41,20 @@ function newTripRegister(req,res,next){
         errorResponse.error = new AppError(['ticket price required'],StatusCodes.BAD_REQUEST);
         return res.status(StatusCodes.BAD_REQUEST).json(errorResponse);
     }
-    if(!req.body.route){
-        req.body.route = `${req.body.from}-${req.body.to}`;
-    }
     if(!req.body.allowedTerminals){
         req.body.allowedTerminals = req.body.boardingTerminal.toString();
     }
-    next();
+    try {
+        if(!req.body.route){
+            const fromCity = await CityService.getCitiyById(req.body.from);
+            const toCity = await CityService.getCitiyById(req.body.to);
+            req.body.route = `${fromCity.cityName}-${toCity.cityName}`;
+        }
+        next();
+    } catch (error) {
+        errorResponse.error = new AppError(['service unavailable'],StatusCodes.INTERNAL_SERVER_ERROR);
+        return res.status(errorResponse.error.statusCode).json(errorResponse);
+    }
 }
 
 module.exports = {

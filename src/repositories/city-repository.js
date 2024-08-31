@@ -16,6 +16,19 @@ class CityRepository extends Crud{
         }
     }
 
+    async getCitiyById(id){
+        try {
+            const city = await City.findOne({
+                where:{
+                    id:id,
+                }
+            });
+            return city;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }
 
 module.exports = CityRepository;
