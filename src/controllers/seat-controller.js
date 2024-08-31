@@ -14,10 +14,10 @@ async function getSeatMap(req,res) {
     }
 }
 
-async function bookSeats(req,res) {
+async function blockSeats(req,res) {
     console.log(req.body.seatIds);
     try {
-        const response = await SeatService.bookSeats(req.body.seatIds);
+        const response = await SeatService.blockSeats(req.body.seatIds);
         successResponse.data = response;
         return res.status(StatusCodes.OK).json(successResponse);
     } catch (error) {
@@ -28,5 +28,5 @@ async function bookSeats(req,res) {
 
 module.exports = {
     getSeatMap,
-    bookSeats,
+    blockSeats,
 }

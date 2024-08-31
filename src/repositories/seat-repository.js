@@ -1,7 +1,7 @@
 const Crud = require("./crud-repository");
 const {Seat, sequelize} = require('../models');
 const { generateSeatMap } = require("../utils/helpers/seatMapGenerate");
-const {Transaction} = require('sequelize');
+const {Transaction, Op} = require('sequelize');
 const AppError = require('../utils/errors/App-Error');
 const { StatusCodes } = require("http-status-codes");
 const { Enums } = require("../utils/common");
@@ -33,27 +33,83 @@ class SeatRepository extends Crud{
         }
     }
 
+    async blockSeats(seatIds){
+        const seats = (seatIds.split(',')).map(Number);
+        console.log('inside repo',seats);
+        const transaction = await sequelize.transaction();
+        try {
+            const response = await this.changeSeatStatus(seats,Enums.SeatStat.BLOCKED,transaction);
+            console.log('successfully blocked seats');
+            transaction.commit();
+            return {
+                status:true,
+                msg: 'Successfully blocked seats',
+            }
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
+    }
+
     async bookSeats(seatIds){
         const seats = (seatIds.split(',')).map(Number);
         console.log('inside repo',seats);
         const transaction = await sequelize.transaction();
         try {
-            for(const seat of seats){
-                console.log('inside',seat);
-                const response = await Seat.findByPk(seat,{
-                    lock: transaction.LOCK.UPDATE,
-                    transaction:transaction, 
-                });
-                if(!response) throw new AppError(['no seat found'],StatusCodes.NOT_FOUND);
-                if(response.seatStatus !== Enums.SeatStat.AVAILABLE) throw new AppError(['sorry! seat is already booked choose another one'],StatusCodes.CONFLICT);
-                response.seatStatus = Enums.SeatStat.BLOCKED;
-                await response.save({transaction:transaction});
+            const response = await this.changeSeatStatus(seats,Enums.SeatStat.BOOKED,transaction);
+            console.log('successfully booked seats');
+            transaction.commit();
+            return {
+                status:true,
+                msg: 'Successfully booked seats',
             }
-            await transaction.commit();
-            console.log('successfull booked');
-            return true;
         } catch (error) {
             await transaction.rollback();
+            throw error;
+        }
+    }
+
+    async resetSeats(coachNo){
+        const transaction = await sequelize.transaction();
+        try {
+            const response = await Seat.findAll({
+                where:{
+                    [Op.and]:{
+                        coachNo:coachNo,
+                        [Op.not]:{
+                            seatStatus:Enums.SeatStat.AVAILABLE
+                        }
+                    }
+                }
+            });
+            console.log('seats',response);
+            const seatIds = [];
+            response.forEach((seat)=>seatIds.push(seat.id));
+            const result = await this.changeSeatStatus(seatIds,Enums.SeatStat.AVAILABLE,transaction);
+            transaction.commit();
+            return result;
+        } catch (error) {
+            transaction.rollback();
+            throw error;
+        }
+    }
+
+    async changeSeatStatus(seatIds,changedStatus,t){
+        try {
+            for(const seat of seatIds){
+                const response = await Seat.findByPk(seat,{
+                    lock: t.LOCK.UPDATE,
+                    transaction:t, 
+                });
+                if(!response) throw new AppError(['no seat found'],StatusCodes.NOT_FOUND);
+                if(changedStatus != Enums.SeatStat.AVAILABLE){
+                    if(response.seatStatus == changedStatus) throw new AppError([`sorry! seat is already ${changedStatus} choose another one`],StatusCodes.CONFLICT);
+                }
+                response.seatStatus = changedStatus;
+                await response.save({transaction:t});
+            }
+            return true;
+        } catch (error) {
             throw error;
         }
     }

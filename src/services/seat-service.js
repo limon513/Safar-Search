@@ -15,9 +15,9 @@ async function getSeatMap(coachNo) {
     }
 }
 
-async function bookSeats(seatIds) {
+async function blockSeats(seatIds) {
     try {
-        const response = await SeatRepo.bookSeats(seatIds);
+        const response = await SeatRepo.blockSeats(seatIds);
         return response;
     } catch (error) {
         if(error instanceof Error) throw error;
@@ -27,5 +27,5 @@ async function bookSeats(seatIds) {
 
 module.exports = {
     getSeatMap,
-    bookSeats,
+    blockSeats,
 }

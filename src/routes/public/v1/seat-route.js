@@ -4,6 +4,6 @@ const { SeatMiddleware } = require('../../../middlewares');
 
 const router = express.Router();
 
-router.put('/',SeatMiddleware.bookSeats,SeatController.bookSeats);
+router.put('/',SeatMiddleware.blockSeats,SeatController.blockSeats);
 
 module.exports = router;
