@@ -38,7 +38,7 @@ class BusRepository extends Crud{
                 include:[
                     {
                         model:Trip,
-                        required:true,
+                        required:false,
                         where:{
                             departureDate:{
                                 [Op.gte]:getTodaysDateString()

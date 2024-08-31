@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const {TripRepository} = require('../repositories');
-const { formatTime, compareTime, getTodaysDateString, instantTimeString } = require('../utils/helpers/dateTimeCompare');
+const { formatTime, compareDate, getTodaysDateString, instantTimeString } = require('../utils/helpers/dateTimeCompare');
 const AppError = require('../utils/errors/App-Error');
 const { StatusCodes } = require('http-status-codes');
 
@@ -35,7 +35,7 @@ async function getAllTrips(query) {
     }
 
     if(query.date){
-        if(compareTime(query.date,new Date().getTime())) customFilter.departureDate = getTodaysDateString();
+        if(compareDate(query.date,new Date().getTime())) customFilter.departureDate = getTodaysDateString();
         else customFilter.departureDate = query.date;
     }
 

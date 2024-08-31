@@ -3,6 +3,7 @@ const { errorResponse } = require("../utils/common");
 const AppError = require('../utils/errors/App-Error')
 
 function newBusRegister(req,res,next){
+    console.log(req.body);
     if(!req.body.agencyId){
         errorResponse.error = new AppError(['agencyId required'],StatusCodes.BAD_REQUEST);
         return res.status(errorResponse.error.statusCode).json(errorResponse);
@@ -24,6 +25,7 @@ function newBusRegister(req,res,next){
 }
 
 function getBusesbyAgency(req,res,next){
+    console.log(req.body);
     if(!req.body.agencyId){
         errorResponse.error = new AppError(['agencyId required'],StatusCodes.BAD_REQUEST);
         return res.status(errorResponse.error.statusCode).json(errorResponse);
