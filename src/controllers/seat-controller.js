@@ -14,6 +14,19 @@ async function getSeatMap(req,res) {
     }
 }
 
+async function bookSeats(req,res) {
+    console.log(req.body.seatIds);
+    try {
+        const response = await SeatService.bookSeats(req.body.seatIds);
+        successResponse.data = response;
+        return res.status(StatusCodes.OK).json(successResponse);
+    } catch (error) {
+        errorResponse.error = error;
+        return res.status(error.statusCode).json(errorResponse);
+    }
+}
+
 module.exports = {
     getSeatMap,
+    bookSeats,
 }
