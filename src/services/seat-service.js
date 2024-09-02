@@ -25,7 +25,18 @@ async function blockSeats(seatIds) {
     }
 }
 
+async function bookSeats(seatIds) {
+    try {
+        const response = await SeatRepo.bookSeats(seatIds);
+        return response;
+    } catch (error) {
+        if(error instanceof Error) throw error;
+        throw new AppError(['service unavailable'],StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
 module.exports = {
     getSeatMap,
     blockSeats,
+    bookSeats,
 }

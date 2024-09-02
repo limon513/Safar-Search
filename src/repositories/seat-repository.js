@@ -94,6 +94,8 @@ class SeatRepository extends Crud{
         }
     }
 
+    
+
     async changeSeatStatus(seatIds,changedStatus,t){
         try {
             for(const seat of seatIds){
@@ -102,7 +104,7 @@ class SeatRepository extends Crud{
                     transaction:t, 
                 });
                 if(!response) throw new AppError(['no seat found'],StatusCodes.NOT_FOUND);
-                if(changedStatus != Enums.SeatStat.AVAILABLE){
+                if(changedStatus == response.seatStatus){
                     if(response.seatStatus == changedStatus) throw new AppError([`sorry! seat is already ${changedStatus} choose another one`],StatusCodes.CONFLICT);
                 }
                 response.seatStatus = changedStatus;
