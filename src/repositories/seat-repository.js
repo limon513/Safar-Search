@@ -69,6 +69,24 @@ class SeatRepository extends Crud{
         }
     }
 
+    async clearSeats(seatIds){
+        const seats = (seatIds.split(',')).map(Number);
+        console.log('inside repo',seats);
+        const transaction = await sequelize.transaction();
+        try {
+            const response = await this.changeSeatStatus(seats,Enums.SeatStat.AVAILABLE,transaction);
+            console.log('successfully cleared seats');
+            transaction.commit();
+            return {
+                status:true,
+                msg: 'Successfully cleared seats',
+            }
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
+    }
+
     async resetSeats(coachNo){
         const transaction = await sequelize.transaction();
         try {
@@ -104,8 +122,11 @@ class SeatRepository extends Crud{
                     transaction:t, 
                 });
                 if(!response) throw new AppError(['no seat found'],StatusCodes.NOT_FOUND);
-                if(changedStatus == response.seatStatus){
-                    if(response.seatStatus == changedStatus) throw new AppError([`sorry! seat is already ${changedStatus} choose another one`],StatusCodes.CONFLICT);
+                if(changedStatus == Enums.SeatStat.BLOCKED && response.seatStatus != Enums.SeatStat.AVAILABLE){
+                    throw new AppError([`sorry! seat is already ${changedStatus} choose another one`],StatusCodes.CONFLICT);
+                }
+                if(changedStatus == Enums.SeatStat.BOOKED && response.seatStatus != Enums.SeatStat.BLOCKED){
+                    throw new AppError([`sorry! seat is already ${changedStatus} choose another one`],StatusCodes.CONFLICT);
                 }
                 response.seatStatus = changedStatus;
                 await response.save({transaction:t});

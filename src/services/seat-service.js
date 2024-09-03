@@ -35,8 +35,19 @@ async function bookSeats(seatIds) {
     }
 }
 
+async function clearSeats(seatIds) {
+    try {
+        const response = await SeatRepo.clearSeats(seatIds);
+        return response;
+    } catch (error) {
+        if(error instanceof Error) throw error;
+        throw new AppError(['service unavailable'],StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
 module.exports = {
     getSeatMap,
     blockSeats,
     bookSeats,
+    clearSeats,
 }
