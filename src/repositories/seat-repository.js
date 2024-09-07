@@ -87,27 +87,32 @@ class SeatRepository extends Crud{
         }
     }
 
-    async resetSeats(coachNo){
-        const transaction = await sequelize.transaction();
+    async resetSeats(coachNo,transaction){
         try {
-            const response = await Seat.findAll({
+            const response = await Seat.update({seatStatus:Enums.SeatStat.AVAILABLE},{
                 where:{
-                    [Op.and]:{
-                        coachNo:coachNo,
-                        [Op.not]:{
-                            seatStatus:Enums.SeatStat.AVAILABLE
-                        }
-                    }
-                }
+                    coachNo:coachNo,
+                },
+                transaction:transaction
             });
-            console.log('seats',response);
-            const seatIds = [];
-            response.forEach((seat)=>seatIds.push(seat.id));
-            const result = await this.changeSeatStatus(seatIds,Enums.SeatStat.AVAILABLE,transaction);
-            transaction.commit();
-            return result;
+            return true;
+            // const response = await Seat.findAll({
+            //     where:{
+            //         [Op.and]:{
+            //             coachNo:coachNo,
+            //             [Op.not]:{
+            //                 seatStatus:Enums.SeatStat.AVAILABLE
+            //             }
+            //         }
+            //     }
+            // });
+            // console.log('seats',response);
+            // const seatIds = [];
+            // response.forEach((seat)=>seatIds.push(seat.id));
+            // const result = await this.changeSeatStatus(seatIds,Enums.SeatStat.AVAILABLE,transaction);
+            // transaction.commit();
+            // return result;
         } catch (error) {
-            transaction.rollback();
             throw error;
         }
     }

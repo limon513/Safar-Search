@@ -45,9 +45,19 @@ async function clearSeats(seatIds) {
     }
 }
 
+async function resetSeats(coachNo,transaction) {
+    try {
+        const response = await SeatRepo.resetSeats(coachNo,transaction);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     getSeatMap,
     blockSeats,
     bookSeats,
     clearSeats,
+    resetSeats,
 }

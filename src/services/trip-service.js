@@ -3,13 +3,30 @@ const {TripRepository} = require('../repositories');
 const { formatTime, compareDate, getTodaysDateString, instantTimeString } = require('../utils/helpers/dateTimeCompare');
 const AppError = require('../utils/errors/App-Error');
 const { StatusCodes } = require('http-status-codes');
+const SeatService = require('./seat-service');
+const { sequelize } = require('../models');
 
 const TripRepo = new TripRepository();
 
 async function newTripRegister(data) {
+    const transaction = await sequelize.transaction();
     try {
-        const response = await TripRepo.newTripRegister(data);
+        const checkCoach = await getTripsForRegistration(data.coachNo,data.departureDate);
+        const resetSeats = await SeatService.resetSeats(data.coachNo,transaction);
+        const response = await TripRepo.newTripRegister(data,transaction);
+        transaction.commit();
         return response;
+    } catch (error) {
+        transaction.rollback();
+        throw error;
+    }
+}
+
+async function getTripsForRegistration(coachNo,departureDate) {
+    try {
+        const response = await TripRepo.getTripsForRegistration(coachNo,departureDate);
+        if(response && response.length > 0) throw new AppError(['This coach is already registered for a trip'],StatusCodes.BAD_REQUEST);
+        return true;
     } catch (error) {
         throw error;
     }
@@ -90,4 +107,5 @@ async function getAllTrips(query) {
 module.exports = {
     newTripRegister,
     getAllTrips,
+    getTripsForRegistration,
 }

@@ -7,12 +7,32 @@ class TripRepository extends Crud{
         super(Trip);
     }
 
-    async newTripRegister(data){
+    async newTripRegister(data,transaction){
         try {
-            const response = await Trip.create(data);
+            const response = await Trip.create(data,{transaction:transaction});
             return response;
         } catch (error) {
             console.log(error);
+            throw error;
+        }
+    }
+
+    async getTripsForRegistration(coachNo,departureDate){
+        try {
+            const response = await Trip.findAll({
+                where:{
+                    [Op.and]:[
+                        {coachNo:coachNo},
+                        {
+                            departureDate:{
+                                [Op.gte]:departureDate,
+                            }
+                        }
+                    ]
+                }
+            });
+            return response;
+        } catch (error) {
             throw error;
         }
     }
